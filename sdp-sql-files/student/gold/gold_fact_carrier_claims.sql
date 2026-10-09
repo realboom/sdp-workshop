@@ -11,7 +11,7 @@ This fact table will use the UNPIVOT SQL clause.
 ******************************************************************************************/
 
 
-CREATE MATERIALIZED VIEW  gold.fact_carrier_claims
+CREATE MATERIALIZED VIEW  <YOUR_SCHEMA>.gold_fact_carrier_claims
 CLUSTER BY (beneficiary_key,claim_start_date)
 AS
 SELECT
@@ -42,8 +42,8 @@ SELECT
   ,line_coinsurance_amount
   ,line_allowed_charge_amount
   ,line_processing_indicator_code
-FROM silver.carrier_claims cc 
-LEFT JOIN gold.dim_beneficiary db on cc.beneficiary_code = db.beneficiary_code 
+FROM <YOUR_SCHEMA>.silver_carrier_claims cc 
+LEFT JOIN <YOUR_SCHEMA>.gold_dim_beneficiary db on cc.beneficiary_code = db.beneficiary_code 
   AND year(cc.claim_start_date) >= db.__START_AT
   AND year(cc.claim_start_date) < coalesce(db.__END_AT,9999)  
 UNPIVOT ((nch_payment_amount,line_beneficiary_part_b_deductable_amount,line_beneficiary_primary_payer_paid_amount,line_coinsurance_amount,line_allowed_charge_amount,line_processing_indicator_code,line_icd9_diagnosis_code)

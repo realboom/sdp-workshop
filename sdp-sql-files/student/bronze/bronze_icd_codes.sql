@@ -1,4 +1,4 @@
-CREATE STREAMING TABLE bronze.icd_codes
+CREATE STREAMING TABLE <YOUR_SCHEMA>.bronze_icd_codes
   COMMENT "Lookups for icd9 codes"
 AS 
 SELECT

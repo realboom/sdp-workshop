@@ -1,4 +1,4 @@
-CREATE MATERIALIZED VIEW  gold.dim_date
+CREATE MATERIALIZED VIEW  <YOUR_SCHEMA>.gold_dim_date
 AS
 SELECT
   date

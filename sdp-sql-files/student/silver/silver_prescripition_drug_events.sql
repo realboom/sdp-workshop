@@ -4,9 +4,9 @@ INSTRUCTIONS:
 Afer this comment, write code to create a new silver table with the
 following requirements.
 
-Table Name: silver.prescription_drug_events_insert
+Table Name: <YOUR_SCHEMA>.silver_prescription_drug_events_insert
 Table Type: Streaming
-Source Table: bronze.prescription_drug_events
+Source Table: <YOUR_SCHEMA>.bronze_prescription_drug_events
 
 Fields
 - prescription_drug_events_insert_key = uuid
@@ -33,9 +33,9 @@ INSTRUCTIONS:
 Afer this comment, write code to create a new silver table with the
 following requirements.
 
-Table Name: silver.prescription_drug_events
+Table Name: <YOUR_SCHEMA>.silver_prescription_drug_events
 Table Type: Streaming
-Source Table: silver.prescription_drug_events_insert
+Source Table: <YOUR_SCHEMA>.silver_prescription_drug_events_insert
 
 - This table should show the latest version of each record using a
 SCD type 1

@@ -1,4 +1,4 @@
-CREATE STREAMING TABLE bronze.beneficiary
+CREATE STREAMING TABLE <YOUR_SCHEMA>.bronze_beneficiary
   COMMENT "raw data for summaries of beneficiaries"
 AS 
 SELECT 

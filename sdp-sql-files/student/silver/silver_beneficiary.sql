@@ -5,10 +5,10 @@ The code block below will build the silver table with data transformations neces
 
 Key Concepts in the table:
 - Data is read form the source table with the stream() syntax to bring in only the latest copy of the source table since the last load
-- This will join multiple times to the table bronze.lookups. This table contains descriptions for various fields to transform a code into something that an analyst would understand.
+- This will join multiple times to the table <YOUR_SCHEMA>.bronze_lookups. This table contains descriptions for various fields to transform a code into something that an analyst would understand.
 - Data is typed using case statements to move the data to the desiered format as the bronze tables store everything as strings
 ********************************************************************/
-CREATE STREAMING TABLE silver.beneficiary_insert
+CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_beneficiary_insert
 AS
 SELECT
      uuid() as beneficiary_insert_key
@@ -49,21 +49,21 @@ SELECT
     ,cast(PPPYMT_CAR as double) as carrier_annual_primary_payer_reimbursement_amount
     ,current_timestamp as insert_timestamp 
 FROM 
-stream(bronze.beneficiary) bs
-left join bronze.lookups l_BENE_SEX_IDENT_CD on bs.BENE_SEX_IDENT_CD = l_BENE_SEX_IDENT_CD.code and l_BENE_SEX_IDENT_CD.variable = 'BENE_SEX_IDENT_CD'
-left join bronze.lookups l_BENE_RACE_CD on bs.BENE_RACE_CD = l_BENE_RACE_CD.code and l_BENE_RACE_CD.variable = 'BENE_RACE_CD'
-left join bronze.lookups l_SP_STATE_CODE on bs.SP_STATE_CODE = l_SP_STATE_CODE.code and l_SP_STATE_CODE.variable = 'SP_STATE_CODE'
-left join bronze.lookups l_SP_ALZHDMTA on bs.SP_ALZHDMTA = l_SP_ALZHDMTA.code and l_SP_ALZHDMTA.variable = 'SP_ALZHDMTA'
-left join bronze.lookups l_SP_CHF on bs.SP_CHF = l_SP_CHF.code and l_SP_CHF.variable = 'SP_CHF'
-left join bronze.lookups l_SP_CHRNKIDN on bs.SP_CHRNKIDN = l_SP_CHRNKIDN.code and l_SP_CHRNKIDN.variable = 'SP_CHRNKIDN'
-left join bronze.lookups l_SP_CNCR on bs.SP_CNCR = l_SP_CNCR.code and l_SP_CNCR.variable = 'SP_CNCR'
-left join bronze.lookups l_SP_COPD on bs.SP_COPD = l_SP_COPD.code and l_SP_COPD.variable = 'SP_COPD'
-left join bronze.lookups l_SP_DEPRESSN on bs.SP_DEPRESSN = l_SP_DEPRESSN.code and l_SP_DEPRESSN.variable = 'SP_DEPRESSN'
-left join bronze.lookups l_SP_DIABETES on bs.SP_DIABETES = l_SP_DIABETES.code and l_SP_DIABETES.variable = 'SP_DIABETES'
-left join bronze.lookups l_SP_ISCHMCHT on bs.SP_ISCHMCHT = l_SP_ISCHMCHT.code and l_SP_ISCHMCHT.variable = 'SP_ISCHMCHT'
-left join bronze.lookups l_SP_OSTEOPRS on bs.SP_OSTEOPRS = l_SP_OSTEOPRS.code and l_SP_OSTEOPRS.variable = 'SP_OSTEOPRS'
-left join bronze.lookups l_SP_RA_OA on bs.SP_RA_OA = l_SP_RA_OA.code and l_SP_RA_OA.variable = 'SP_RA_OA'
-left join bronze.lookups l_SP_STRKETIA on bs.SP_STRKETIA = l_SP_STRKETIA.code and l_SP_STRKETIA.variable = 'SP_STRKETIA';
+stream(<YOUR_SCHEMA>.bronze_beneficiary) bs
+left join <YOUR_SCHEMA>.bronze_lookups l_BENE_SEX_IDENT_CD on bs.BENE_SEX_IDENT_CD = l_BENE_SEX_IDENT_CD.code and l_BENE_SEX_IDENT_CD.variable = 'BENE_SEX_IDENT_CD'
+left join <YOUR_SCHEMA>.bronze_lookups l_BENE_RACE_CD on bs.BENE_RACE_CD = l_BENE_RACE_CD.code and l_BENE_RACE_CD.variable = 'BENE_RACE_CD'
+left join <YOUR_SCHEMA>.bronze_lookups l_SP_STATE_CODE on bs.SP_STATE_CODE = l_SP_STATE_CODE.code and l_SP_STATE_CODE.variable = 'SP_STATE_CODE'
+left join <YOUR_SCHEMA>.bronze_lookups l_SP_ALZHDMTA on bs.SP_ALZHDMTA = l_SP_ALZHDMTA.code and l_SP_ALZHDMTA.variable = 'SP_ALZHDMTA'
+left join <YOUR_SCHEMA>.bronze_lookups l_SP_CHF on bs.SP_CHF = l_SP_CHF.code and l_SP_CHF.variable = 'SP_CHF'
+left join <YOUR_SCHEMA>.bronze_lookups l_SP_CHRNKIDN on bs.SP_CHRNKIDN = l_SP_CHRNKIDN.code and l_SP_CHRNKIDN.variable = 'SP_CHRNKIDN'
+left join <YOUR_SCHEMA>.bronze_lookups l_SP_CNCR on bs.SP_CNCR = l_SP_CNCR.code and l_SP_CNCR.variable = 'SP_CNCR'
+left join <YOUR_SCHEMA>.bronze_lookups l_SP_COPD on bs.SP_COPD = l_SP_COPD.code and l_SP_COPD.variable = 'SP_COPD'
+left join <YOUR_SCHEMA>.bronze_lookups l_SP_DEPRESSN on bs.SP_DEPRESSN = l_SP_DEPRESSN.code and l_SP_DEPRESSN.variable = 'SP_DEPRESSN'
+left join <YOUR_SCHEMA>.bronze_lookups l_SP_DIABETES on bs.SP_DIABETES = l_SP_DIABETES.code and l_SP_DIABETES.variable = 'SP_DIABETES'
+left join <YOUR_SCHEMA>.bronze_lookups l_SP_ISCHMCHT on bs.SP_ISCHMCHT = l_SP_ISCHMCHT.code and l_SP_ISCHMCHT.variable = 'SP_ISCHMCHT'
+left join <YOUR_SCHEMA>.bronze_lookups l_SP_OSTEOPRS on bs.SP_OSTEOPRS = l_SP_OSTEOPRS.code and l_SP_OSTEOPRS.variable = 'SP_OSTEOPRS'
+left join <YOUR_SCHEMA>.bronze_lookups l_SP_RA_OA on bs.SP_RA_OA = l_SP_RA_OA.code and l_SP_RA_OA.variable = 'SP_RA_OA'
+left join <YOUR_SCHEMA>.bronze_lookups l_SP_STRKETIA on bs.SP_STRKETIA = l_SP_STRKETIA.code and l_SP_STRKETIA.variable = 'SP_STRKETIA';
 
 
 /********************************************************************
@@ -76,12 +76,12 @@ The table is then merged into the deduplicate version of the table using the aut
 - STORED AS: This will determine if we are using SCD Type 1 (merge to the latest record) or SCD Type 2 (tracks changes in the table). In this scenario, we are using type 1.
 ********************************************************************/
 
-CREATE OR REFRESH STREAMING TABLE silver.beneficiary;
+CREATE OR REFRESH STREAMING TABLE <YOUR_SCHEMA>.silver_beneficiary;
 
 CREATE FLOW silver_beneficiary AS AUTO CDC 
-  INTO silver.beneficiary
+  INTO <YOUR_SCHEMA>.silver_beneficiary
 FROM
-  stream(silver.beneficiary_insert)
+  stream(<YOUR_SCHEMA>.silver_beneficiary_insert)
 KEYS
   (beneficiary_unique_key)
 SEQUENCE BY
