@@ -1,5 +1,5 @@
 --create insert-only table with all the business logic
-CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_icd_codes_insert
+CREATE TEMPORARY VIEW silver_icd_codes_insert
   (
     CONSTRAINT `Diagnosis code is not null`    EXPECT (diagnosis_code is not null) ON VIOLATION DROP ROW
   )
@@ -19,7 +19,7 @@ CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_icd_codes;
 CREATE FLOW silver_icd_codes AS AUTO CDC 
   INTO <YOUR_SCHEMA>.silver_icd_codes
 FROM
-  stream(<YOUR_SCHEMA>.silver_icd_codes_insert)
+  stream(silver_icd_codes_insert)
 KEYS
   (icd_codes_key)
 SEQUENCE BY

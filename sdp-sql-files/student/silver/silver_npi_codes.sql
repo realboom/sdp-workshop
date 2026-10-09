@@ -1,5 +1,5 @@
 --create insert-only table with all the business logic
-CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_npi_codes_insert
+CREATE TEMPORARY VIEW silver_npi_codes_insert
 AS
 SELECT
     uuid() as npi_codes_insert_key
@@ -77,7 +77,7 @@ CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_npi_codes;
 CREATE FLOW silver_npi_codes AS AUTO CDC 
   INTO <YOUR_SCHEMA>.silver_npi_codes
 FROM
-  stream(<YOUR_SCHEMA>.silver_npi_codes_insert)
+  stream(silver_npi_codes_insert)
 KEYS
   (npi_codes_key)
 SEQUENCE BY

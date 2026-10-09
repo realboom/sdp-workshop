@@ -6,7 +6,7 @@ not met.
 ******************************************************************************************/
 
 --create insert-only table with all the business logic
-CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_carrier_claims_insert(
+CREATE TEMPORARY VIEW silver_carrier_claims_insert(
   CONSTRAINT `Beneficiary code is not null`    EXPECT (beneficiary_code is not null)
 )
 AS
@@ -165,7 +165,7 @@ CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_carrier_claims;
 CREATE FLOW silver_carrier_claims AS AUTO CDC 
   INTO <YOUR_SCHEMA>.silver_carrier_claims
 FROM
-  stream(<YOUR_SCHEMA>.silver_carrier_claims_insert)
+  stream(silver_carrier_claims_insert)
 KEYS
   (carrier_claims_key)
 SEQUENCE BY
