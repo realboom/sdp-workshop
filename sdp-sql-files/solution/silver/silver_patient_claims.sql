@@ -16,13 +16,13 @@ this example do display how a flow will work.
 
 
 --create the table both sources
-CREATE STREAMING TABLE silver.patient_claims_insert;
+CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_patient_claims_insert;
 
 --create flow for inpatient claims
 CREATE FLOW 
   inpatient_claims_insert
 AS INSERT INTO
-  silver.patient_claims_insert BY NAME
+  <YOUR_SCHEMA>.silver_patient_claims_insert BY NAME
 SELECT
    uuid() as patient_claims_insert_key
   ,md5(ic.DESYNPUF_ID ||ic.CLM_ID ||ic.SEGMENT) as patient_claims_key
@@ -109,13 +109,13 @@ SELECT
   ,cast(ic.HCPCS_CD_44 as string) as hcfa_procedure_code_44
   ,cast(ic.HCPCS_CD_45 as string) as hcfa_procedure_code_45
   ,current_timestamp as insert_timestamp
-FROM stream(bronze.inpatient_claims) ic;
+FROM stream(<YOUR_SCHEMA>.bronze_inpatient_claims) ic;
 
 --create flow for outpatient claims
 CREATE FLOW 
   outpatient_claims
 AS INSERT INTO
-  silver.patient_claims_insert BY NAME
+  <YOUR_SCHEMA>.silver_patient_claims_insert BY NAME
 SELECT
    uuid() as patient_claims_insert_key
   ,md5(oc.DESYNPUF_ID ||oc.CLM_ID ||oc.SEGMENT) as patient_claims_key
@@ -197,16 +197,16 @@ SELECT
   ,cast(oc.HCPCS_CD_44 as string) as hcfa_procedure_code_44
   ,cast(oc.HCPCS_CD_45 as string) as hcfa_procedure_code_45
   ,current_timestamp as insert_timestamp
-FROM stream(bronze.outpatient_claims) oc;
+FROM stream(<YOUR_SCHEMA>.bronze_outpatient_claims) oc;
 
 
 --create the merged version of the table
-CREATE STREAMING TABLE silver.patient_claims;
+CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_patient_claims;
 
 CREATE FLOW silver_patient_claims AS AUTO CDC 
-  INTO silver.patient_claims
+  INTO <YOUR_SCHEMA>.silver_patient_claims
 FROM
-  stream(silver.patient_claims_insert)
+  stream(<YOUR_SCHEMA>.silver_patient_claims_insert)
 KEYS
   (patient_claims_key)
 SEQUENCE BY

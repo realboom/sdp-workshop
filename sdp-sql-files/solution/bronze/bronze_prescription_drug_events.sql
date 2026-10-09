@@ -4,7 +4,7 @@ INSTRUCTIONS:
 Afer this comment, write code to create a new bronze table with the
 following requirements.
 
-Table name: bronze.prescription_drug_events
+Table name: <YOUR_SCHEMA>.bronze_prescription_drug_events
 File Path: prescription_drug_events in the folder defined by the ${volume_path} variable
 Format: CSV
 Do no infer column types
@@ -15,7 +15,7 @@ bring back:
 - medatada from the source file
 ************************************************************************/
 
-CREATE STREAMING TABLE bronze.prescription_drug_events
+CREATE STREAMING TABLE <YOUR_SCHEMA>.bronze_prescription_drug_events
   COMMENT "raw data for prescription drug events"
 AS 
 SELECT 

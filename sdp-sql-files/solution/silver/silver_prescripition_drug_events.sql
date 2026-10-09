@@ -4,9 +4,9 @@ INSTRUCTIONS:
 Afer this comment, write code to create a new silver table with the
 following requirements.
 
-Table Name: silver.prescription_drug_events_insert
+Table Name: silver_prescription_drug_events_insert
 Table Type: Streaming
-Source Table: bronze.prescription_drug_events
+Source Table: <YOUR_SCHEMA>.bronze_prescription_drug_events
 
 Fields
 - prescription_drug_events_insert_key = uuid
@@ -22,7 +22,7 @@ Fields
 - insert_timestamp set as current_timestamp
 
 ************************************************************************/
-CREATE STREAMING TABLE silver.prescription_drug_events_insert
+CREATE TEMPORARY VIEW silver_prescription_drug_events_insert
 AS
 SELECT
     uuid() as prescription_drug_events_insert_key
@@ -36,7 +36,7 @@ SELECT
   ,cast(pde.PTNT_PAY_AMT as double) as patient_pay_amount
   ,cast(pde.TOT_RX_CST_AMT as double) as gross_drug_cost
   ,current_timestamp as insert_timestamp
-FROM stream(bronze.prescription_drug_events) pde;
+FROM stream(<YOUR_SCHEMA>.bronze_prescription_drug_events) pde;
 
 
 /************************************************************************
@@ -45,9 +45,9 @@ INSTRUCTIONS:
 Afer this comment, write code to create a new silver table with the
 following requirements.
 
-Table Name: silver.prescription_drug_events
+Table Name: <YOUR_SCHEMA>.silver_prescription_drug_events
 Table Type: Streaming
-Source Table: silver.prescription_drug_events_insert
+Source Table: silver_prescription_drug_events_insert
 
 - This table should show the latest version of each record using a
 SCD type 1
@@ -56,12 +56,12 @@ SCD type 1
 - reference all columns except for prescription_drug_events_insert_key
 
 ************************************************************************/
-CREATE STREAMING TABLE silver.prescription_drug_events;
+CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_prescription_drug_events;
 
 CREATE FLOW silver_prescription_drug_events AS AUTO CDC 
-  INTO silver.prescription_drug_events
+  INTO <YOUR_SCHEMA>.silver_prescription_drug_events
 FROM
-  stream(silver.prescription_drug_events_insert)
+  stream(silver_prescription_drug_events_insert)
 KEYS
   (prescription_drug_events_key)
 SEQUENCE BY

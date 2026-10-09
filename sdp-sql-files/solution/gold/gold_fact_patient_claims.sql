@@ -6,7 +6,7 @@ or deleted and we want to refelect that easily in the fact tables. We will be re
 Enzyme to find the most performative way to update these tables.
 ******************************************************************************************/
 
-CREATE MATERIALIZED VIEW  gold.fact_patient_claims
+CREATE MATERIALIZED VIEW  <YOUR_SCHEMA>.gold_fact_patient_claims
 AS
 SELECT
    c.patient_claims_key
@@ -33,7 +33,7 @@ SELECT
   ,md5(c.icd9_procedure_code_4) as procedure_key_4
   ,md5(c.icd9_procedure_code_5) as procedure_key_5
   ,md5(c.icd9_admitting_diagnosis_code) as admitting_key
-FROM silver.patient_claims c
-LEFT JOIN gold.dim_beneficiary db on c.beneficiary_code = db.beneficiary_code 
+FROM <YOUR_SCHEMA>.silver_patient_claims c
+LEFT JOIN <YOUR_SCHEMA>.gold_dim_beneficiary db on c.beneficiary_code = db.beneficiary_code 
   AND year(c.claim_start_date) >= db.__START_AT
   AND year(c.claim_start_date) < coalesce(db.__END_AT,9999)

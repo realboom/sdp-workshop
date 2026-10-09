@@ -1,4 +1,4 @@
-CREATE STREAMING TABLE bronze.inpatient_claims
+CREATE STREAMING TABLE <YOUR_SCHEMA>.bronze_inpatient_claims
   COMMENT "raw data for inpatient claim transactions"
 AS 
 SELECT 

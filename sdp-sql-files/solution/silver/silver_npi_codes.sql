@@ -1,5 +1,5 @@
 --create insert-only table with all the business logic
-CREATE STREAMING TABLE silver.npi_codes_insert
+CREATE TEMPORARY VIEW silver_npi_codes_insert
 AS
 SELECT
     uuid() as npi_codes_insert_key
@@ -65,19 +65,19 @@ SELECT
   ,Healthcare_Provider_Primary_Taxonomy_Switch_3 as healthcare_provider_primary_taxonomy_switch_3
   ,to_date(Certification_Date,'MM/dd/yyyy') as certification_date
   ,current_timestamp as insert_timestamp
-FROM stream(bronze.npi_codes) n
-left join bronze.lookups l_entity_type_code on n.entity_type_code = l_entity_type_code.code and l_entity_type_code.variable = 'entity_type_code'
-left join bronze.lookups l_gender_code on n.Provider_Gender_Code = l_gender_code.code and l_gender_code.variable = 'gender_code';
+FROM stream(<YOUR_SCHEMA>.bronze_npi_codes) n
+left join <YOUR_SCHEMA>.bronze_lookups l_entity_type_code on n.entity_type_code = l_entity_type_code.code and l_entity_type_code.variable = 'entity_type_code'
+left join <YOUR_SCHEMA>.bronze_lookups l_gender_code on n.Provider_Gender_Code = l_gender_code.code and l_gender_code.variable = 'gender_code';
 
 
 
 --create the merged silver table
-CREATE STREAMING TABLE silver.npi_codes;
+CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_npi_codes;
 
 CREATE FLOW silver_npi_codes AS AUTO CDC 
-  INTO silver.npi_codes
+  INTO <YOUR_SCHEMA>.silver_npi_codes
 FROM
-  stream(silver.npi_codes_insert)
+  stream(silver_npi_codes_insert)
 KEYS
   (npi_codes_key)
 SEQUENCE BY

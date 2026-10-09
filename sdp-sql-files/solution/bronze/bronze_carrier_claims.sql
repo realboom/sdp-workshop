@@ -1,4 +1,4 @@
-CREATE STREAMING TABLE bronze.carrier_claims
+CREATE STREAMING TABLE <YOUR_SCHEMA>.bronze_carrier_claims
   COMMENT "raw data for carrier claim transactions"
 AS 
 SELECT 

@@ -6,15 +6,15 @@ be defined as a subquery
 We will thent ake the result to load an SCD Type 2 dimension.
 ******************************************************************************************/
 
-CREATE STREAMING TABLE gold.dim_beneficiary;
+CREATE STREAMING TABLE <YOUR_SCHEMA>.gold_dim_beneficiary;
 
 CREATE FLOW gold_dim_beneficiary AS AUTO CDC 
-  INTO gold.dim_beneficiary
+  INTO <YOUR_SCHEMA>.gold_dim_beneficiary
 FROM
   (select 
       uuid() as beneficiary_key
       ,* 
-    from stream(silver.beneficiary_insert)
+    from stream(<YOUR_SCHEMA>.silver_beneficiary_insert)
   )
 KEYS
   (beneficiary_code)

@@ -1,4 +1,4 @@
-CREATE MATERIALIZED VIEW gold.rpt_patient_claims
+CREATE MATERIALIZED VIEW <YOUR_SCHEMA>.gold_rpt_patient_claims
 AS
 select
    b.*
@@ -10,6 +10,6 @@ select
   ,c.inpatient_admission_date
   ,c.claim_payment_amount
   ,c.primary_payer_claim_paid_amount
-from gold.fact_patient_claims c
-join gold.dim_beneficiary b on c.beneficiary_key = b.beneficiary_key
-join gold.dim_provider p on c.attending_physician_provider_key = p.provider_key
+from <YOUR_SCHEMA>.gold_fact_patient_claims c
+join <YOUR_SCHEMA>.gold_dim_beneficiary b on c.beneficiary_key = b.beneficiary_key
+join <YOUR_SCHEMA>.gold_dim_provider p on c.attending_physician_provider_key = p.provider_key

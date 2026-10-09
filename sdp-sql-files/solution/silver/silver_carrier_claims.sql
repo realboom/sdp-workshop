@@ -6,7 +6,7 @@ not met.
 ******************************************************************************************/
 
 --create insert-only table with all the business logic
-CREATE STREAMING TABLE silver.carrier_claims_insert(
+CREATE TEMPORARY VIEW silver_carrier_claims_insert(
   CONSTRAINT `Beneficiary code is not null`    EXPECT (beneficiary_code is not null)
 )
 AS
@@ -156,16 +156,16 @@ SELECT
   ,cast(cc.LINE_ICD9_DGNS_CD_12 as string) as line_icd9_diagnosis_code_12
   ,cast(cc.LINE_ICD9_DGNS_CD_13 as string) as line_icd9_diagnosis_code_13
   ,current_timestamp as insert_timestamp
-FROM stream(bronze.carrier_claims) cc;
+FROM stream(<YOUR_SCHEMA>.bronze_carrier_claims) cc;
 
 
 --create the merged silver table
-CREATE STREAMING TABLE silver.carrier_claims;
+CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_carrier_claims;
 
 CREATE FLOW silver_carrier_claims AS AUTO CDC 
-  INTO silver.carrier_claims
+  INTO <YOUR_SCHEMA>.silver_carrier_claims
 FROM
-  stream(silver.carrier_claims_insert)
+  stream(silver_carrier_claims_insert)
 KEYS
   (carrier_claims_key)
 SEQUENCE BY

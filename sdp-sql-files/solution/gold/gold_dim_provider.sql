@@ -1,4 +1,4 @@
-CREATE MATERIALIZED VIEW  gold.dim_provider
+CREATE MATERIALIZED VIEW  <YOUR_SCHEMA>.gold_dim_provider
 AS
 SELECT 
     npi_codes_key as provider_key
@@ -18,4 +18,4 @@ SELECT
    ,provider_business_practice_location_address_state_name
    ,provider_business_practice_location_address_postal_code
    ,provider_business_practice_location_address_country_code_if_outside_us
-FROM silver.npi_codes
+FROM <YOUR_SCHEMA>.silver_npi_codes
