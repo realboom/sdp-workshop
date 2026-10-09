@@ -1,3 +1,8 @@
 .DS_Store
 __pycache__/
 *.pyc
+
+# data lives in a Volume, never in git
+cms_data.zip
+*.zip
+*.csv
