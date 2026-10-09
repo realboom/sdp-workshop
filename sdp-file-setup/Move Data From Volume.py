@@ -4,7 +4,7 @@ dbutils.widgets.text("source_location", "/Volumes/cms_workshop_data/bronze/raw_d
 source_location = dbutils.widgets.get("source_location")
 
 #destination location widget
-dbutils.widgets.text("destination_location", "/Volumes/cms_source/bronze/raw_data")
+dbutils.widgets.text("destination_location", "/Volumes/cms_source/raw/raw_data")
 destination_location = dbutils.widgets.get("destination_location")
 
 # COMMAND ----------

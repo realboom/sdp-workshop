@@ -10,7 +10,7 @@ print(files_to_process)
 
 # DBTITLE 1,Widgets for Root Paths
 # Create widget for the common root path
-dbutils.widgets.text("volume_root", "/Volumes/cms_source/bronze/raw_data", "Volume Root Path")
+dbutils.widgets.text("volume_root", "/Volumes/cms_source/raw/raw_data", "Volume Root Path")
 
 # Get widget value
 volume_root = dbutils.widgets.get("volume_root")
