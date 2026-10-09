@@ -1,7 +1,16 @@
 -- Databricks notebook source
 -- MAGIC %md
--- MAGIC Create the catalog, schema, and volume — the source location all students run from.
--- MAGIC Set the **catalog** widget (first cell) to the catalog you want to create/use, then run the rest.
+-- MAGIC # Start Here — Setup Catalog, Schema, and Volume
+-- MAGIC Set the **catalog** widget (first cell) to the catalog you want, then run the rest. This creates
+-- MAGIC the catalog/schema/volume and loads the first incremental data batch.
+-- MAGIC
+-- MAGIC **Prerequisite — upload the CMS data into the volume** at `/Volumes/<catalog>/raw/raw_data/` in
+-- MAGIC this layout (the data lives in the volume; there's no volume-to-volume copy step):
+-- MAGIC - `all_data/<table>/…` — **staging**, the full set: `beneficiary`, `carrier_claims`,
+-- MAGIC   `inpatient_claims`, `outpatient_claims`, `prescription_drug_events`
+-- MAGIC - `date/`, `icd_codes/`, `lookups/`, `npi_codes/` — reference tables, at the volume root
+-- MAGIC - leave the per-table landing dirs (`beneficiary/`, `carrier_claims/`, …) **empty** — the
+-- MAGIC   `Incremental Data Load` notebook fills them one batch at a time.
 
 -- COMMAND ----------
 
@@ -17,21 +26,9 @@ CREATE VOLUME  IF NOT EXISTS IDENTIFIER(:catalog || '.raw.raw_data');
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Move the data from the delta share to the native volume. This helps performance during the workshop.
-
--- COMMAND ----------
-
--- MAGIC %python
--- MAGIC catalog = dbutils.widgets.get("catalog")
--- MAGIC dbutils.notebook.run("./Move Data From Volume", 0, {
--- MAGIC   "source_location": "/Volumes/cms_workshop_data/bronze/raw_data",
--- MAGIC   "destination_location": f"/Volumes/{catalog}/raw/raw_data"
--- MAGIC })
-
--- COMMAND ----------
-
--- MAGIC %md
--- MAGIC Load the first batch of data. There are 20 batches that can be moved over the workshop to show incremental or continuous loads.
+-- MAGIC Load the first batch. `Incremental Data Load` copies one batch from `all_data/<table>/` into each
+-- MAGIC table's landing dir. There are 20 batches — re-run with a higher `files` value during the workshop
+-- MAGIC to demonstrate incremental / continuous loads.
 
 -- COMMAND ----------
 
