@@ -4,7 +4,7 @@
 -- MAGIC Set the **catalog** widget (first cell) to the catalog you want, then run the rest. This creates
 -- MAGIC the catalog/schema/volume and loads the first incremental data batch.
 -- MAGIC
--- MAGIC **Prerequisite — upload the CMS data into the volume** at `/Volumes/<catalog>/raw/raw_data/` in
+-- MAGIC **Prerequisite — upload the CMS data into the volume** at `/Volumes/<catalog>/bronze/raw_data/` in
 -- MAGIC this layout (the data lives in the volume; there's no volume-to-volume copy step):
 -- MAGIC - `all_data/<table>/…` — **staging**, the full set: `beneficiary`, `carrier_claims`,
 -- MAGIC   `inpatient_claims`, `outpatient_claims`, `prescription_drug_events`
@@ -20,8 +20,8 @@ CREATE WIDGET TEXT catalog DEFAULT 'cms_workshop';
 -- COMMAND ----------
 
 CREATE CATALOG IF NOT EXISTS IDENTIFIER(:catalog);
-CREATE SCHEMA  IF NOT EXISTS IDENTIFIER(:catalog || '.raw');
-CREATE VOLUME  IF NOT EXISTS IDENTIFIER(:catalog || '.raw.raw_data');
+CREATE SCHEMA  IF NOT EXISTS IDENTIFIER(:catalog || '.bronze');
+CREATE VOLUME  IF NOT EXISTS IDENTIFIER(:catalog || '.bronze.raw_data');
 
 -- COMMAND ----------
 
@@ -35,7 +35,7 @@ CREATE VOLUME  IF NOT EXISTS IDENTIFIER(:catalog || '.raw.raw_data');
 -- MAGIC %python
 -- MAGIC catalog = dbutils.widgets.get("catalog")
 -- MAGIC dbutils.notebook.run("./Incremental Data Load", 0, {
--- MAGIC   "Volume Root Path": f"/Volumes/{catalog}/raw/raw_data",
+-- MAGIC   "Volume Root Path": f"/Volumes/{catalog}/bronze/raw_data",
 -- MAGIC   "files": "1"
 -- MAGIC })
 
