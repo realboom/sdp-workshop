@@ -16,7 +16,13 @@ this example do display how a flow will work.
 
 
 --create the table both sources
-CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_patient_claims_insert;
+-- Repaired form of the workshop break: inpatient_claims_bad_data.csv holds a claim whose
+-- start date is after its end date. DROP ROW quarantines that bad record (visible in the
+-- pipeline event log / data-quality metrics) so the update completes cleanly. The student
+-- version uses FAIL UPDATE, which stops the pipeline until it is repaired.
+CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_patient_claims_insert
+  ( CONSTRAINT `Claim start on or before claim end`
+      EXPECT (claim_start_date <= claim_end_date) ON VIOLATION DROP ROW );
 
 --create flow for inpatient claims
 CREATE FLOW 

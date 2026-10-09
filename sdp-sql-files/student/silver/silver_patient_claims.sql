@@ -16,7 +16,14 @@ this example do display how a flow will work.
 
 
 --create the table both sources
-CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_patient_claims_insert;
+-- WORKSHOP BREAK (repair exercise): the shared source includes inpatient_claims_bad_data.csv,
+-- which holds a claim whose start date is AFTER its end date. ON VIOLATION FAIL UPDATE stops
+-- the pipeline update when that record is ingested here.
+-- REPAIR: change `FAIL UPDATE` to `DROP ROW` to quarantine the bad record (see the solution),
+--         or remove inpatient_claims_bad_data.csv from the source volume, then re-run.
+CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_patient_claims_insert
+  ( CONSTRAINT `Claim start on or before claim end`
+      EXPECT (claim_start_date <= claim_end_date) ON VIOLATION FAIL UPDATE );
 
 --create flow for inpatient claims
 CREATE FLOW 
