@@ -16,13 +16,15 @@ this example do display how a flow will work.
 
 
 --create the table both sources
--- Repaired form of the workshop break: inpatient_claims_bad_data.csv holds a claim whose
--- start date is after its end date. DROP ROW quarantines that bad record (visible in the
--- pipeline event log / data-quality metrics) so the update completes cleanly. The student
--- version uses FAIL UPDATE, which stops the pipeline until it is repaired.
+-- Repaired form of the workshop break using the QUARANTINE pattern.
+-- inpatient_claims_bad_data.csv holds a claim whose start date is after its end date.
+-- Rather than dropping it (DROP ROW) or stopping the pipeline (FAIL UPDATE, the student
+-- version), keep every row here and record violations as a data-quality metric (EXPECT with
+-- no action), then split downstream: valid rows flow to silver_patient_claims and bad rows
+-- are captured in silver_patient_claims_quarantine for review / reprocessing.
 CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_patient_claims_insert
   ( CONSTRAINT `Claim start on or before claim end`
-      EXPECT (claim_start_date <= claim_end_date) ON VIOLATION DROP ROW );
+      EXPECT (claim_start_date <= claim_end_date) );
 
 --create flow for inpatient claims
 CREATE FLOW 
@@ -206,13 +208,23 @@ SELECT
 FROM stream(<YOUR_SCHEMA>.bronze_outpatient_claims) oc;
 
 
+-- Quarantine split: valid rows continue down the medallion; invalid rows are captured.
+CREATE TEMPORARY VIEW silver_patient_claims_valid AS
+  SELECT * FROM STREAM(<YOUR_SCHEMA>.silver_patient_claims_insert)
+  WHERE claim_start_date <= claim_end_date;
+
+-- Quarantine table: the bad records, kept for review / reprocessing (not discarded).
+CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_patient_claims_quarantine AS
+  SELECT * FROM STREAM(<YOUR_SCHEMA>.silver_patient_claims_insert)
+  WHERE NOT (claim_start_date <= claim_end_date);
+
 --create the merged version of the table
 CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_patient_claims;
 
 CREATE FLOW silver_patient_claims AS AUTO CDC 
   INTO <YOUR_SCHEMA>.silver_patient_claims
 FROM
-  stream(<YOUR_SCHEMA>.silver_patient_claims_insert)
+  stream(silver_patient_claims_valid)
 KEYS
   (patient_claims_key)
 SEQUENCE BY
