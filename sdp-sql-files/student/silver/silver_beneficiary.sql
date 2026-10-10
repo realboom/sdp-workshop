@@ -8,7 +8,7 @@ Key Concepts in the table:
 - This will join multiple times to the table <YOUR_SCHEMA>.bronze_lookups. This table contains descriptions for various fields to transform a code into something that an analyst would understand.
 - Data is typed using case statements to move the data to the desiered format as the bronze tables store everything as strings
 ********************************************************************/
-CREATE TEMPORARY VIEW silver_beneficiary_insert
+CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_beneficiary_insert
 AS
 SELECT
      uuid() as beneficiary_insert_key
@@ -81,7 +81,7 @@ CREATE OR REFRESH STREAMING TABLE <YOUR_SCHEMA>.silver_beneficiary;
 CREATE FLOW silver_beneficiary AS AUTO CDC 
   INTO <YOUR_SCHEMA>.silver_beneficiary
 FROM
-  stream(silver_beneficiary_insert)
+  stream(<YOUR_SCHEMA>.silver_beneficiary_insert)
 KEYS
   (beneficiary_unique_key)
 SEQUENCE BY
