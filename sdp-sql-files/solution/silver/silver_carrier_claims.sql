@@ -156,14 +156,14 @@ SELECT
   ,cast(cc.LINE_ICD9_DGNS_CD_12 as string) as line_icd9_diagnosis_code_12
   ,cast(cc.LINE_ICD9_DGNS_CD_13 as string) as line_icd9_diagnosis_code_13
   ,current_timestamp as insert_timestamp
-FROM stream(<YOUR_SCHEMA>.bronze_carrier_claims) cc;
+FROM stream(bronze_carrier_claims) cc;
 
 
 --create the merged silver table
-CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_carrier_claims;
+CREATE STREAMING TABLE silver_carrier_claims;
 
 CREATE FLOW silver_carrier_claims AS AUTO CDC 
-  INTO <YOUR_SCHEMA>.silver_carrier_claims
+  INTO silver_carrier_claims
 FROM
   stream(silver_carrier_claims_insert)
 KEYS

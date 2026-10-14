@@ -1,4 +1,4 @@
-CREATE STREAMING TABLE <YOUR_SCHEMA>.bronze_npi_codes
+CREATE STREAMING TABLE bronze_npi_codes
   COMMENT "Lookups for National Provider Identifier Number"
 AS 
 SELECT

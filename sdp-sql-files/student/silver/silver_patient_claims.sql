@@ -21,7 +21,7 @@ this example do display how a flow will work.
 -- the pipeline update when that record is ingested here.
 -- REPAIR: change `FAIL UPDATE` to `DROP ROW` to quarantine the bad record (see the solution),
 --         or remove inpatient_claims_bad_data.csv from the source volume, then re-run.
-CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_patient_claims_insert
+CREATE STREAMING TABLE silver_patient_claims_insert
   ( CONSTRAINT `Claim start on or before claim end`
       EXPECT (claim_start_date <= claim_end_date) ON VIOLATION FAIL UPDATE );
 
@@ -29,7 +29,7 @@ CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_patient_claims_insert
 CREATE FLOW 
   inpatient_claims_insert
 AS INSERT INTO
-  <YOUR_SCHEMA>.silver_patient_claims_insert BY NAME
+  silver_patient_claims_insert BY NAME
 SELECT
    uuid() as patient_claims_insert_key
   ,md5(ic.DESYNPUF_ID ||ic.CLM_ID ||ic.SEGMENT) as patient_claims_key
@@ -116,13 +116,13 @@ SELECT
   ,cast(ic.HCPCS_CD_44 as string) as hcfa_procedure_code_44
   ,cast(ic.HCPCS_CD_45 as string) as hcfa_procedure_code_45
   ,current_timestamp as insert_timestamp
-FROM stream(<YOUR_SCHEMA>.bronze_inpatient_claims) ic;
+FROM stream(bronze_inpatient_claims) ic;
 
 --create flow for outpatient claims
 CREATE FLOW 
   outpatient_claims
 AS INSERT INTO
-  <YOUR_SCHEMA>.silver_patient_claims_insert BY NAME
+  silver_patient_claims_insert BY NAME
 SELECT
    uuid() as patient_claims_insert_key
   ,md5(oc.DESYNPUF_ID ||oc.CLM_ID ||oc.SEGMENT) as patient_claims_key
@@ -204,16 +204,16 @@ SELECT
   ,cast(oc.HCPCS_CD_44 as string) as hcfa_procedure_code_44
   ,cast(oc.HCPCS_CD_45 as string) as hcfa_procedure_code_45
   ,current_timestamp as insert_timestamp
-FROM stream(<YOUR_SCHEMA>.bronze_outpatient_claims) oc;
+FROM stream(bronze_outpatient_claims) oc;
 
 
 --create the merged version of the table
-CREATE STREAMING TABLE <YOUR_SCHEMA>.silver_patient_claims;
+CREATE STREAMING TABLE silver_patient_claims;
 
 CREATE FLOW silver_patient_claims AS AUTO CDC 
-  INTO <YOUR_SCHEMA>.silver_patient_claims
+  INTO silver_patient_claims
 FROM
-  stream(<YOUR_SCHEMA>.silver_patient_claims_insert)
+  stream(silver_patient_claims_insert)
 KEYS
   (patient_claims_key)
 SEQUENCE BY

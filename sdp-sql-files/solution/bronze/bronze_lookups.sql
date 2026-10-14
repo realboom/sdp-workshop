@@ -1,4 +1,4 @@
-CREATE STREAMING TABLE <YOUR_SCHEMA>.bronze_lookups
+CREATE STREAMING TABLE bronze_lookups
   COMMENT "Code lookups accross tables"
 AS 
 SELECT 
