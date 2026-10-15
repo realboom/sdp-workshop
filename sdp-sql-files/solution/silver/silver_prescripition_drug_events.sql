@@ -1,12 +1,16 @@
 /************************************************************************
 INSTRUCTIONS:
 
-Afer this comment, write code to create a new silver table with the
-following requirements.
+Afer this comment, write code to create a new silver temporary view
+with the following requirements.
 
-Table Name: silver_prescription_drug_events_insert
-Table Type: Streaming
+View Name: silver_prescription_drug_events_insert
+View Type: Temporary
 Source Table: bronze_prescription_drug_events
+
+Create this as a temporary view (CREATE TEMPORARY VIEW), not a table.
+Read the source with stream(...) so the view streams into the merged
+table below.
 
 Fields
 - prescription_drug_events_insert_key = uuid
@@ -47,7 +51,7 @@ following requirements.
 
 Table Name: silver_prescription_drug_events
 Table Type: Streaming
-Source Table: silver_prescription_drug_events_insert
+Source View: silver_prescription_drug_events_insert
 
 - This table should show the latest version of each record using a
 SCD type 1
